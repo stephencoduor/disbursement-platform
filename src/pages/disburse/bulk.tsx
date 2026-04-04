@@ -180,7 +180,7 @@ export default function BulkDisbursePage() {
               </div>
 
               <div className="mt-4 flex gap-3">
-                <Button onClick={() => setSubmitted(true)}>
+                <Button variant="cta" onClick={() => setSubmitted(true)}>
                   <Send className="mr-2 h-4 w-4" />
                   Submit Batch for Approval
                 </Button>

@@ -30,9 +30,9 @@ import {
 } from "recharts";
 
 const carrierData = [
-  { name: "Airtel Money", value: 45, color: "oklch(0.45 0.1 160)" },
-  { name: "MTN MoMo", value: 35, color: "oklch(0.78 0.14 80)" },
-  { name: "Zamtel Kwacha", value: 20, color: "oklch(0.60 0.18 145)" },
+  { name: "Airtel Money", value: 45, color: "#0B3B3C" },
+  { name: "MTN MoMo", value: 35, color: "#2EC4B6" },
+  { name: "Zamtel Kwacha", value: 20, color: "#1A5C5E" },
 ];
 
 const recentActivity = [
@@ -154,14 +154,14 @@ export default function PlatformDashboardPage() {
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={monthlyRevenue}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="month" className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} />
-                <YAxis className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} tickFormatter={(v) => fmtCompact(v)} />
+                <XAxis dataKey="month" className="text-xs" tick={{ fill: "#64748B" }} />
+                <YAxis className="text-xs" tick={{ fill: "#64748B" }} tickFormatter={(v) => fmtCompact(v)} />
                 <Tooltip
                   formatter={(value) => fmtZMW(Number(value))}
-                  contentStyle={{ borderRadius: "8px", border: "1px solid oklch(0.90 0.01 90)" }}
+                  contentStyle={{ borderRadius: "8px", border: "1px solid #CBD5E1" }}
                 />
-                <Bar dataKey="volume" fill="oklch(0.45 0.1 160)" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="revenue" fill="oklch(0.78 0.14 80)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="volume" fill="#0B3B3C" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" fill="#2EC4B6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -176,18 +176,18 @@ export default function PlatformDashboardPage() {
             <ResponsiveContainer width="100%" height={280}>
               <LineChart data={monthlyRevenue}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="month" className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} />
-                <YAxis className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} tickFormatter={(v) => `K${(v / 1000).toFixed(0)}k`} />
+                <XAxis dataKey="month" className="text-xs" tick={{ fill: "#64748B" }} />
+                <YAxis className="text-xs" tick={{ fill: "#64748B" }} tickFormatter={(v) => `K${(v / 1000).toFixed(0)}k`} />
                 <Tooltip
                   formatter={(value) => fmtZMW(Number(value))}
-                  contentStyle={{ borderRadius: "8px", border: "1px solid oklch(0.90 0.01 90)" }}
+                  contentStyle={{ borderRadius: "8px", border: "1px solid #CBD5E1" }}
                 />
                 <Line
                   type="monotone"
                   dataKey="revenue"
-                  stroke="oklch(0.60 0.18 145)"
+                  stroke="#2EC4B6"
                   strokeWidth={2.5}
-                  dot={{ fill: "oklch(0.60 0.18 145)", r: 4 }}
+                  dot={{ fill: "#2EC4B6", r: 4 }}
                 />
               </LineChart>
             </ResponsiveContainer>

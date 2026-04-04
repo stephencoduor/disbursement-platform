@@ -207,10 +207,10 @@ export default function DashboardPage() {
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={weeklyData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="day" className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} />
-                <YAxis className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
-                <Tooltip formatter={(value) => fmtZMW(Number(value))} contentStyle={{ borderRadius: "8px", border: "1px solid oklch(0.90 0.01 90)" }} />
-                <Bar dataKey="disbursed" fill="oklch(0.45 0.1 160)" radius={[4, 4, 0, 0]} />
+                <XAxis dataKey="day" className="text-xs" tick={{ fill: "#64748B" }} />
+                <YAxis className="text-xs" tick={{ fill: "#64748B" }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
+                <Tooltip formatter={(value) => fmtZMW(Number(value))} contentStyle={{ borderRadius: "8px", border: "1px solid #CBD5E1" }} />
+                <Bar dataKey="disbursed" fill="#0B3B3C" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

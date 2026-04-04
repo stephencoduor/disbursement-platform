@@ -92,17 +92,17 @@ export default function RevenuePage() {
             <ResponsiveContainer width="100%" height={280}>
               <AreaChart data={monthlyRevenue}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="month" className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} />
-                <YAxis className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} tickFormatter={(v) => `K${(v / 1000).toFixed(0)}k`} />
+                <XAxis dataKey="month" className="text-xs" tick={{ fill: "#64748B" }} />
+                <YAxis className="text-xs" tick={{ fill: "#64748B" }} tickFormatter={(v) => `K${(v / 1000).toFixed(0)}k`} />
                 <Tooltip
                   formatter={(value) => fmtZMW(Number(value))}
-                  contentStyle={{ borderRadius: "8px", border: "1px solid oklch(0.90 0.01 90)" }}
+                  contentStyle={{ borderRadius: "8px", border: "1px solid #CBD5E1" }}
                 />
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke="oklch(0.45 0.1 160)"
-                  fill="oklch(0.45 0.1 160 / 0.15)"
+                  stroke="#0B3B3C"
+                  fill="rgba(11, 59, 60, 0.15)"
                   strokeWidth={2}
                 />
               </AreaChart>
@@ -121,19 +121,19 @@ export default function RevenuePage() {
                 layout="vertical"
               >
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis type="number" className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} tickFormatter={(v) => `K${(v / 1000).toFixed(0)}k`} />
+                <XAxis type="number" className="text-xs" tick={{ fill: "#64748B" }} tickFormatter={(v) => `K${(v / 1000).toFixed(0)}k`} />
                 <YAxis
                   type="category"
                   dataKey="company"
                   className="text-xs"
-                  tick={{ fill: "oklch(0.50 0.01 250)" }}
+                  tick={{ fill: "#64748B" }}
                   width={130}
                 />
                 <Tooltip
                   formatter={(value) => fmtZMW(Number(value))}
-                  contentStyle={{ borderRadius: "8px", border: "1px solid oklch(0.90 0.01 90)" }}
+                  contentStyle={{ borderRadius: "8px", border: "1px solid #CBD5E1" }}
                 />
-                <Bar dataKey="revenue" fill="oklch(0.78 0.14 80)" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="revenue" fill="#2EC4B6" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

@@ -52,7 +52,7 @@ export default function PlatformSidebar() {
               cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-sidebar-accent text-sidebar-primary"
+                  ? "bg-sidebar-accent text-white border-l-[3px] border-[#2EC4B6]"
                   : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
               )
             }
@@ -62,13 +62,10 @@ export default function PlatformSidebar() {
                 <item.icon
                   className={cn(
                     "h-[18px] w-[18px] shrink-0",
-                    isActive && "text-sidebar-primary"
+                    isActive && "text-white"
                   )}
                 />
                 <span>{item.label}</span>
-                {isActive && (
-                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-sidebar-primary" />
-                )}
               </>
             )}
           </NavLink>

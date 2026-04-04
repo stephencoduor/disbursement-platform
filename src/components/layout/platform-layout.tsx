@@ -13,7 +13,6 @@ import {
 import { platformOperator } from "@/data/mock";
 import { Search, User, Settings, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const pageTitles: Record<string, string> = {
   "/platform": "Platform Dashboard",
@@ -60,7 +59,7 @@ export default function PlatformLayout() {
       )}
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-16 shrink-0 items-center gap-4 border-b bg-card px-4 lg:px-6">
+        <header className="flex h-16 shrink-0 items-center gap-4 bg-[#E8F4F8]/80 backdrop-blur-md border-b border-[#E8F4F8] px-4 lg:px-6">
           <Button
             variant="ghost"
             size="icon"
@@ -81,8 +80,6 @@ export default function PlatformLayout() {
               />
             </div>
           </div>
-
-          <ThemeToggle />
 
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -118,7 +115,7 @@ export default function PlatformLayout() {
           </DropdownMenu>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+        <main className="flex-1 overflow-y-auto p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

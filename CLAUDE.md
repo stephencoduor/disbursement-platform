@@ -5,26 +5,39 @@ An enterprise disbursement platform for the Zambian market — a control, visibi
 
 **Client:** Publicly traded technology company (competitive RFP)
 **Status:** Prototype/design phase — no backend connected
-**Sibling project:** D:\neobank — NeoBank digital banking prototype (same Savanna design system)
+**Branch:** `v4-lagoon` — Lagoon design system variant (teal + turquoise + coral)
+**Sibling project:** D:\neobank — NeoBank digital banking prototype (Savanna design system)
 **GitHub:** https://github.com/stephencoduor/disbursement-platform
 
 ## Tech Stack
 - **Frontend:** React 19 + Vite 8 + TypeScript 5 + Tailwind CSS v4 + shadcn/ui (base-ui)
 - **Backend (planned):** Orchestration layer connecting to custodian APIs + mobile money providers
-- **Design System:** Savanna — deep forest greens + warm golds (shared with NeoBank)
+- **Design System:** Lagoon — deep teal + turquoise + coral (premium, serene, oceanic)
 - **Charts:** Recharts
 - **Icons:** Lucide React
-- **Font:** Geist Variable (via @fontsource-variable/geist)
+- **Font:** Plus Jakarta Sans Variable (via @fontsource-variable/plus-jakarta-sans)
 - **Routing:** React Router v7 with lazy loading
 
-## Design System — Savanna
-Identical to NeoBank. CSS custom properties in oklch color space (defined in `src/index.css`):
-- **Primary:** `oklch(0.45 0.1 160)` — Deep Forest Green (#2D6A4F)
-- **Gold:** `oklch(0.78 0.14 80)` — Warm Gold accent (#E9B949)
-- **Sidebar:** `oklch(0.22 0.06 160)` — Dark green sidebar
-- **Background:** `oklch(0.99 0.005 100)` — Warm off-white (#FAFAF5)
-- Full dark mode support via `.dark` class on `<html>`
-- Theme toggle (light/dark/system) in all layout headers
+## Design System — Lagoon (v4)
+CSS custom properties in HEX (defined in `src/index.css`):
+- **Primary:** `#0B3B3C` — Deep Teal
+- **Accent/Gold:** `#2EC4B6` — Turquoise (replaces gold from Savanna)
+- **CTA:** `#F4845F` — Warm Coral (action buttons)
+- **CTA Hover:** `#E5734F` — Darker Coral
+- **Sidebar:** `#0B3B3C` — Dark Teal sidebar with turquoise accents
+- **Background:** `#E8F4F8` — Blue-tinted off-white (Lagoon signature)
+- **Cards:** White (#FFFFFF) with floating shadows, rounded-2xl
+- **Header:** Glassmorphic with backdrop-blur
+- **Focus rings:** Turquoise (#2EC4B6)
+- **Light mode only** — no dark mode in this variant
+
+### Visual Signatures
+- Blue-tinted page background (#E8F4F8) instead of white
+- Glassmorphic sticky header with `backdrop-blur-md`
+- 3px turquoise left border on active sidebar nav items
+- Coral CTA buttons for primary actions
+- Floating shadow cards (no visible borders)
+- Custom teal scrollbar (6px, #1A5C5E)
 
 ## Pages (28 total)
 
@@ -51,7 +64,7 @@ Identical to NeoBank. CSS custom properties in oklch color space (defined in `sr
 | `/employees/new` | `pages/employees/new.tsx` | Add employee: name, +260 phone, carrier, cost centre |
 | `/employees/:id` | `pages/employees/detail.tsx` | Employee profile, disbursement history |
 | `/employees/bulk-upload` | `pages/employees/bulk-upload.tsx` | CSV drag-drop, template, preview, validation |
-| `/disburse` | `pages/disburse/single.tsx` | 3-step: select employee → amount/purpose/intent → review |
+| `/disburse` | `pages/disburse/single.tsx` | 3-step: select employee -> amount/purpose/intent -> review |
 | `/disburse/bulk` | `pages/disburse/bulk.tsx` | Bulk CSV upload with batch preview and fee summary |
 | `/disburse/review/:id` | `pages/disburse/review.tsx` | Full disbursement breakdown |
 | `/approvals` | `pages/approvals/index.tsx` | Approval queue: pending/approved/rejected tabs |
@@ -77,11 +90,11 @@ Identical to NeoBank. CSS custom properties in oklch color space (defined in `sr
 src/
 ├── App.tsx                    # Router with 28 lazy-loaded routes
 ├── main.tsx                   # Entry point wrapped in ThemeProvider
-├── index.css                  # Savanna design system tokens (light + dark)
+├── index.css                  # Lagoon design system tokens (light only)
 ├── components/
 │   ├── layout/                # AuthLayout, PlatformLayout, CompanyLayout + sidebars
-│   ├── shared/                # Domain components (fee-breakdown, status-badge, etc.)
-│   └── ui/                    # 23 shadcn components + theme-toggle
+│   ├── shared/                # Domain components
+│   └── ui/                    # 22 shadcn components (no theme-toggle)
 ├── data/
 │   ├── types.ts               # All domain interfaces
 │   ├── mock.ts                # Platform stats, company stats, audit log
@@ -91,15 +104,15 @@ src/
 │   └── fee-config.ts          # Fee calculation engine
 ├── lib/
 │   ├── utils.ts               # cn() utility
-│   ├── theme-context.tsx      # ThemeProvider + useTheme hook
+│   ├── theme-context.tsx      # ThemeProvider (light-only)
 │   └── format.ts              # fmtZMW(), fmtCompact(), fmtDate(), fmtPhone()
 └── pages/                     # All 28 pages organized by module
 ```
 
 ### Layouts
-- **AuthLayout** (`components/layout/auth-layout.tsx`) — Split screen: green brand panel + form. DisbursePro branding with Banknote icon.
-- **PlatformLayout** (`components/layout/platform-layout.tsx`) — Platform Operator sidebar with [PLATFORM] badge. Nav: Dashboard, Companies, Revenue, Settings.
-- **CompanyLayout** (`components/layout/company-layout.tsx`) — Company sidebar with wallet balance display, pending approvals badge, "Coming Soon" section with lock icons. Mobile responsive.
+- **AuthLayout** (`components/layout/auth-layout.tsx`) — Split screen: teal brand panel + form. Coral logo icon, turquoise feature icons.
+- **PlatformLayout** (`components/layout/platform-layout.tsx`) — Platform Operator sidebar with [PLATFORM] badge. Glassmorphic header.
+- **CompanyLayout** (`components/layout/company-layout.tsx`) — Company sidebar with wallet balance display, turquoise active borders, glassmorphic header. Mobile responsive.
 
 ### User Roles
 | Role | Access | Description |
@@ -119,10 +132,11 @@ The platform does NOT hold funds. Customer funds sit in wallets managed by a lic
 - **3-tier limit hierarchy:** Network > Platform > Company (lowest wins)
 
 ### shadcn/ui Notes
-Same as NeoBank — uses **base-ui** primitives (NOT Radix):
+Uses **base-ui** primitives (NOT Radix):
 - `DropdownMenuTrigger` uses `render=` prop instead of `asChild`
 - `Select.onValueChange` returns `(value: string | null)` — wrap with `(val) => setState(val ?? "")`
 - Import path: `@/components/ui/*`
+- Button has `cta` variant for coral action buttons
 
 ## Mock Data
 All dummy data is **realistic Zambian context** — never lorem ipsum or generic names.
@@ -135,9 +149,6 @@ All dummy data is **realistic Zambian context** — never lorem ipsum or generic
 - 15 employees with Zambian names across cost centres (Northern Route, Southern Route, City Fleet, Long Haul, Maintenance)
 - Disbursement purposes: fuel, trip allowance, repairs, meals, advances, salary, supplies
 
-## Screenshots
-34 screenshots in `screenshots/` (01-login through 34-approvals-dark), including 6 dark mode variants.
-
 ## Commands
 ```bash
 npm install          # Install dependencies
@@ -149,12 +160,19 @@ npx tsc --noEmit     # TypeScript check only
 ## Development Rules
 - All mock data must use realistic Zambian names, locations, currencies (ZMW), phone numbers (+260)
 - Never use lorem ipsum or generic test names
-- Design system colors: use Tailwind classes with CSS vars (bg-primary, text-gold, etc.)
-- Dark mode: `.dark` class on document root, all tokens defined in index.css
+- Design system colors: use Tailwind classes with CSS vars (bg-primary, text-gold/text-accent, etc.)
+- No dark mode in this variant — Lagoon is light-only
 - Always verify `tsc --noEmit` + `vite build` pass after changes
 - Save screenshots to `screenshots/` after completing visual changes
 - Fee calculation uses pure functions in `data/fee-config.ts`
 - Phase 2 pages must be visible but grayed out (per RFP requirement)
+- CTA buttons use `variant="cta"` for coral (#F4845F) primary actions
+
+## Design System Variants
+| Branch | Design System | Character |
+|--------|--------------|-----------|
+| `master` | v2 Savanna | Deep forest green + warm gold, dark mode |
+| `v4-lagoon` | v4 Lagoon | Deep teal + turquoise + coral, light only |
 
 ## RFP Context
 - **Engagement:** MVP-first ($10K-$20K), then Full Build ($80K-$150K)

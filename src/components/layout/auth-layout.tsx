@@ -13,7 +13,7 @@ export default function AuthLayout() {
 
         {/* Logo */}
         <div className="relative z-10 flex items-center gap-2.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F4845F]">
             <Banknote className="h-5 w-5 text-gold-foreground" />
           </div>
           <span className="text-2xl font-bold tracking-tight text-white">
@@ -38,7 +38,7 @@ export default function AuthLayout() {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10">
-                <Users className="h-4 w-4 text-gold" />
+                <Users className="h-4 w-4 text-[#2EC4B6]" />
               </div>
               <div>
                 <p className="text-sm font-medium text-white">
@@ -52,7 +52,7 @@ export default function AuthLayout() {
 
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10">
-                <Zap className="h-4 w-4 text-gold" />
+                <Zap className="h-4 w-4 text-[#2EC4B6]" />
               </div>
               <div>
                 <p className="text-sm font-medium text-white">
@@ -66,7 +66,7 @@ export default function AuthLayout() {
 
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10">
-                <Shield className="h-4 w-4 text-gold" />
+                <Shield className="h-4 w-4 text-[#2EC4B6]" />
               </div>
               <div>
                 <p className="text-sm font-medium text-white">

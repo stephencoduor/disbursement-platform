@@ -1,13 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
-
-@custom-variant dark (&:is(.dark *));
+@import "@fontsource-variable/plus-jakarta-sans";
 
 @theme inline {
     --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-sans: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -45,6 +43,8 @@
     --color-success-foreground: var(--success-foreground);
     --color-gold: var(--gold);
     --color-gold-foreground: var(--gold-foreground);
+    --color-cta: var(--cta);
+    --color-cta-hover: var(--cta-hover);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -54,110 +54,74 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ── Savanna Design System ──────────────────────────────────────────────── */
+/* ── Lagoon Design System ──────────────────────────────────────────────── */
 :root {
-    /* Primary: Deep Forest Green */
-    --primary: oklch(0.45 0.1 160);
-    --primary-foreground: oklch(1 0 0);
+    /* Primary: Deep Teal */
+    --primary: #0B3B3C;
+    --primary-foreground: #FFFFFF;
 
-    /* Secondary: Warm Gold accent */
-    --secondary: oklch(0.95 0.02 90);
-    --secondary-foreground: oklch(0.25 0.05 50);
+    /* Secondary */
+    --secondary: #F5FAFB;
+    --secondary-foreground: #0B3B3C;
 
-    /* Gold token */
-    --gold: oklch(0.78 0.14 80);
-    --gold-foreground: oklch(0.25 0.05 50);
+    /* Gold → Turquoise (accent role) */
+    --gold: #2EC4B6;
+    --gold-foreground: #0B3B3C;
+
+    /* CTA: Coral */
+    --cta: #F4845F;
+    --cta-hover: #E5734F;
 
     /* Backgrounds */
-    --background: oklch(0.99 0.005 100);
-    --foreground: oklch(0.15 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.15 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.15 0 0);
+    --background: #E8F4F8;
+    --foreground: #0B3B3C;
+    --card: #FFFFFF;
+    --card-foreground: #334155;
+    --popover: #FFFFFF;
+    --popover-foreground: #334155;
 
     /* Muted */
-    --muted: oklch(0.96 0.008 100);
-    --muted-foreground: oklch(0.50 0.01 250);
+    --muted: #F5FAFB;
+    --muted-foreground: #64748B;
 
-    /* Accent */
-    --accent: oklch(0.94 0.02 160);
-    --accent-foreground: oklch(0.25 0.08 160);
+    /* Accent: Turquoise */
+    --accent: #2EC4B6;
+    --accent-foreground: #0B3B3C;
 
     /* Destructive */
-    --destructive: oklch(0.58 0.22 25);
+    --destructive: #EF4444;
 
     /* Warning */
-    --warning: oklch(0.75 0.15 85);
-    --warning-foreground: oklch(0.30 0.08 60);
+    --warning: #FFD166;
+    --warning-foreground: #92400E;
 
     /* Success */
-    --success: oklch(0.60 0.18 145);
-    --success-foreground: oklch(1 0 0);
+    --success: #2EC4B6;
+    --success-foreground: #0B3B3C;
 
     /* Borders & Inputs */
-    --border: oklch(0.90 0.01 90);
-    --input: oklch(0.90 0.01 90);
-    --ring: oklch(0.45 0.1 160);
+    --border: #E8F4F8;
+    --input: #E8F4F8;
+    --ring: #2EC4B6;
 
-    /* Charts — Savanna-themed */
-    --chart-1: oklch(0.45 0.1 160);
-    --chart-2: oklch(0.78 0.14 80);
-    --chart-3: oklch(0.60 0.18 145);
-    --chart-4: oklch(0.55 0.08 250);
-    --chart-5: oklch(0.65 0.12 30);
+    /* Charts — Lagoon-themed */
+    --chart-1: #0B3B3C;
+    --chart-2: #2EC4B6;
+    --chart-3: #F4845F;
+    --chart-4: #FFD166;
+    --chart-5: #1A5C5E;
 
     --radius: 0.75rem;
 
     /* Sidebar */
-    --sidebar: oklch(0.22 0.06 160);
-    --sidebar-foreground: oklch(0.95 0.01 160);
-    --sidebar-primary: oklch(0.78 0.14 80);
-    --sidebar-primary-foreground: oklch(0.15 0 0);
-    --sidebar-accent: oklch(0.28 0.06 160);
-    --sidebar-accent-foreground: oklch(0.92 0.01 160);
-    --sidebar-border: oklch(0.30 0.05 160);
-    --sidebar-ring: oklch(0.78 0.14 80);
-}
-
-.dark {
-    --primary: oklch(0.75 0.12 160);
-    --primary-foreground: oklch(0.15 0.05 160);
-    --secondary: oklch(0.25 0.02 90);
-    --secondary-foreground: oklch(0.90 0.02 90);
-    --gold: oklch(0.78 0.14 80);
-    --gold-foreground: oklch(0.15 0.05 50);
-    --background: oklch(0.13 0.02 160);
-    --foreground: oklch(0.95 0.01 100);
-    --card: oklch(0.18 0.02 160);
-    --card-foreground: oklch(0.95 0.01 100);
-    --popover: oklch(0.18 0.02 160);
-    --popover-foreground: oklch(0.95 0.01 100);
-    --muted: oklch(0.22 0.02 160);
-    --muted-foreground: oklch(0.65 0.02 160);
-    --accent: oklch(0.25 0.04 160);
-    --accent-foreground: oklch(0.90 0.04 160);
-    --destructive: oklch(0.65 0.2 25);
-    --warning: oklch(0.75 0.15 85);
-    --warning-foreground: oklch(0.20 0.05 60);
-    --success: oklch(0.55 0.16 145);
-    --success-foreground: oklch(1 0 0);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.55 0.1 160);
-    --chart-1: oklch(0.65 0.12 160);
-    --chart-2: oklch(0.78 0.14 80);
-    --chart-3: oklch(0.55 0.16 145);
-    --chart-4: oklch(0.55 0.08 250);
-    --chart-5: oklch(0.65 0.12 30);
-    --sidebar: oklch(0.15 0.04 160);
-    --sidebar-foreground: oklch(0.95 0.01 100);
-    --sidebar-primary: oklch(0.78 0.14 80);
-    --sidebar-primary-foreground: oklch(0.15 0 0);
-    --sidebar-accent: oklch(0.22 0.04 160);
-    --sidebar-accent-foreground: oklch(0.90 0.02 100);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.55 0.1 160);
+    --sidebar: #0B3B3C;
+    --sidebar-foreground: #A8D8D0;
+    --sidebar-primary: #2EC4B6;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: #1A5C5E;
+    --sidebar-accent-foreground: #FFFFFF;
+    --sidebar-border: #1A5C5E;
+    --sidebar-ring: #2EC4B6;
 }
 
 @layer base {
@@ -170,4 +134,12 @@
   html {
     @apply font-sans;
   }
+}
+
+/* Lagoon custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: #1A5C5E;
+  border-radius: 3px;
 }

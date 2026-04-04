@@ -129,10 +129,10 @@ export default function ReportsPage() {
             <ResponsiveContainer width="100%" height={280}>
               <LineChart data={monthlyTrend}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="month" className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} />
-                <YAxis className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} tickFormatter={(v) => fmtCompact(v)} />
+                <XAxis dataKey="month" className="text-xs" tick={{ fill: "#64748B" }} />
+                <YAxis className="text-xs" tick={{ fill: "#64748B" }} tickFormatter={(v) => fmtCompact(v)} />
                 <Tooltip formatter={(value) => fmtZMW(Number(value))} contentStyle={{ borderRadius: "8px" }} />
-                <Line type="monotone" dataKey="volume" stroke="oklch(0.45 0.1 160)" strokeWidth={2.5} dot={{ r: 4 }} />
+                <Line type="monotone" dataKey="volume" stroke="#0B3B3C" strokeWidth={2.5} dot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -147,10 +147,10 @@ export default function ReportsPage() {
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={employeeSpend} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis type="number" className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} tickFormatter={(v) => fmtCompact(v)} />
-                <YAxis type="category" dataKey="name" className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} width={100} />
+                <XAxis type="number" className="text-xs" tick={{ fill: "#64748B" }} tickFormatter={(v) => fmtCompact(v)} />
+                <YAxis type="category" dataKey="name" className="text-xs" tick={{ fill: "#64748B" }} width={100} />
                 <Tooltip formatter={(value) => fmtZMW(Number(value))} contentStyle={{ borderRadius: "8px" }} />
-                <Bar dataKey="total" fill="oklch(0.78 0.14 80)" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="total" fill="#2EC4B6" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -165,10 +165,10 @@ export default function ReportsPage() {
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={costCentreSpend}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="name" className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} />
-                <YAxis className="text-xs" tick={{ fill: "oklch(0.50 0.01 250)" }} tickFormatter={(v) => fmtCompact(v)} />
+                <XAxis dataKey="name" className="text-xs" tick={{ fill: "#64748B" }} />
+                <YAxis className="text-xs" tick={{ fill: "#64748B" }} tickFormatter={(v) => fmtCompact(v)} />
                 <Tooltip formatter={(value) => fmtZMW(Number(value))} contentStyle={{ borderRadius: "8px" }} />
-                <Bar dataKey="total" fill="oklch(0.60 0.18 145)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="total" fill="#2EC4B6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

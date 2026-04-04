@@ -366,7 +366,7 @@ export default function SingleDisbursePage() {
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Edit
               </Button>
-              <Button onClick={handleSubmit} className="flex-1">
+              <Button variant="cta" onClick={handleSubmit} className="flex-1">
                 <Send className="mr-2 h-4 w-4" />
                 Submit for Approval
               </Button>

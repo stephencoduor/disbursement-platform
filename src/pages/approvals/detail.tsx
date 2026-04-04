@@ -150,8 +150,9 @@ export default function ApprovalDetailPage() {
             </div>
             <div className="flex gap-3">
               <Button
+                variant="cta"
                 onClick={() => handleAction("approved")}
-                className="flex-1 bg-success hover:bg-success/90"
+                className="flex-1"
               >
                 <CheckCircle2 className="mr-2 h-4 w-4" />
                 Approve
