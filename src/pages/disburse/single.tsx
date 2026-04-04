@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { employees, carrierLabels } from "@/data/employees";
-import { calculateFees } from "@/data/fee-config";
+import { calculateFees, validateDisbursementAmount } from "@/data/fee-config";
 import { purposeLabels } from "@/data/disbursements";
 import { fmtZMW, fmtPhone } from "@/lib/format";
 import type { MobileMoneyCarrier, DisbursementIntent } from "@/data/types";
@@ -47,6 +47,9 @@ export default function SingleDisbursePage() {
   const fees = employee
     ? calculateFees(netAmount, employee.carrier as MobileMoneyCarrier, intent)
     : null;
+  const validation = employee && netAmount > 0
+    ? validateDisbursementAmount(netAmount, employee.carrier as MobileMoneyCarrier)
+    : { valid: true };
 
   const handleSubmit = () => {
     setSubmitted(true);
@@ -254,6 +257,18 @@ export default function SingleDisbursePage() {
               </>
             )}
 
+            {/* Limit validation warning */}
+            {!validation.valid && netAmount > 0 && (
+              <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-destructive" />
+                  <p className="text-xs text-destructive font-medium">
+                    {validation.error}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="flex gap-3">
               <Button variant="outline" onClick={() => setStep(0)} className="flex-1">
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -261,7 +276,7 @@ export default function SingleDisbursePage() {
               </Button>
               <Button
                 onClick={() => setStep(2)}
-                disabled={!amount || !purpose || netAmount <= 0}
+                disabled={!amount || !purpose || netAmount <= 0 || !validation.valid}
                 className="flex-1"
               >
                 Review

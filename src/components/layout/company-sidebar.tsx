@@ -140,7 +140,7 @@ export default function CompanySidebar() {
       {/* Bottom section */}
       <div className="space-y-1 p-3">
         <button
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate("/notifications")}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
         >
           <Bell className="h-[18px] w-[18px]" />

@@ -24,10 +24,30 @@ export default function ApprovalDetailPage() {
   const [comment, setComment] = useState("");
   const disbursement = disbursements.find((d) => d.id === id) ?? disbursements[3]; // default to pending one
 
-  const isPending = disbursement.status === "pending_approval";
+  const [actionTaken, setActionTaken] = useState<"approved" | "rejected" | null>(null);
+  const isPending = disbursement.status === "pending_approval" && !actionTaken;
+
+  const handleAction = (action: "approved" | "rejected") => {
+    setActionTaken(action);
+    setTimeout(() => navigate("/approvals"), 2000);
+  };
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
+      {/* Action toast */}
+      {actionTaken && (
+        <div className={`rounded-lg px-4 py-3 text-sm ${
+          actionTaken === "approved"
+            ? "border border-success/30 bg-success/10 text-success"
+            : "border border-destructive/30 bg-destructive/10 text-destructive"
+        }`}>
+          {actionTaken === "approved"
+            ? `Disbursement ${disbursement.id} approved. Processing payment to ${disbursement.employeeName}...`
+            : `Disbursement ${disbursement.id} rejected. The initiator will be notified.`
+          }
+        </div>
+      )}
+
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={() => navigate("/approvals")}>
           <ArrowLeft className="h-5 w-5" />
@@ -130,7 +150,7 @@ export default function ApprovalDetailPage() {
             </div>
             <div className="flex gap-3">
               <Button
-                onClick={() => navigate("/approvals")}
+                onClick={() => handleAction("approved")}
                 className="flex-1 bg-success hover:bg-success/90"
               >
                 <CheckCircle2 className="mr-2 h-4 w-4" />
@@ -138,7 +158,7 @@ export default function ApprovalDetailPage() {
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => navigate("/approvals")}
+                onClick={() => handleAction("rejected")}
                 className="flex-1"
               >
                 <XCircle className="mr-2 h-4 w-4" />

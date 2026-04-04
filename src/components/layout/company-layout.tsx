@@ -26,6 +26,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
+  "/notifications": "Notifications",
   "/employees": "Employee Registry",
   "/employees/new": "Add Employee",
   "/employees/bulk-upload": "Bulk Upload",
@@ -118,7 +119,7 @@ export default function CompanyLayout() {
             variant="ghost"
             size="icon"
             className="relative"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/notifications")}
           >
             <Bell className="h-5 w-5" />
             {unreadCount > 0 && (

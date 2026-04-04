@@ -19,6 +19,7 @@ const PlatformSettingsPage = lazy(() => import("@/pages/platform/settings"));
 
 // Company Portal pages
 const DashboardPage = lazy(() => import("@/pages/dashboard/index"));
+const NotificationsPage = lazy(() => import("@/pages/dashboard/notifications"));
 const EmployeesPage = lazy(() => import("@/pages/employees/index"));
 const EmployeeNewPage = lazy(() => import("@/pages/employees/new"));
 const EmployeeDetailPage = lazy(() => import("@/pages/employees/detail"));
@@ -76,6 +77,7 @@ export default function App() {
           {/* Company Portal routes */}
           <Route element={<CompanyLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/employees" element={<EmployeesPage />} />
             <Route path="/employees/new" element={<EmployeeNewPage />} />
             <Route path="/employees/bulk-upload" element={<BulkUploadPage />} />
