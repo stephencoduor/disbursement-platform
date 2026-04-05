@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    DisbursePro - Tenant Seed Data
+    Copyright (c) 2026 Qsoftwares Ltd. All rights reserved.
+
+    Populates the default tenant with DisbursePro-specific reference data:
+    - Head Office renamed to "DisbursePro Zambia - Lusaka HQ"
+    - ZMW (Zambian Kwacha) enabled as an organisation currency
+    - DisbursePro global configurations (carrier fees, approval thresholds,
+      wallet limits, platform fee)
+-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <!-- 1. Rename Head Office for DisbursePro Zambia -->
+    <changeSet author="dispro" id="dispro-seed-1-office">
+        <update tableName="m_office">
+            <column name="name" value="DisbursePro Zambia - Lusaka HQ"/>
+            <column name="external_id" value="DP-ZM-HQ"/>
+            <column name="opening_date" valueDate="2026-01-01"/>
+            <where>id = 1</where>
+        </update>
+    </changeSet>
+
+    <!-- 2. Enable ZMW (Zambian Kwacha) -->
+    <changeSet author="dispro" id="dispro-seed-2-zmw-currency">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM m_organisation_currency WHERE code = 'ZMW'</sqlCheck>
+        </preConditions>
+        <insert tableName="m_organisation_currency">
+            <column name="code" value="ZMW"/>
+            <column name="decimal_places" valueNumeric="2"/>
+            <column name="currency_multiplesof"/>
+            <column name="name" value="Zambian Kwacha"/>
+            <column name="display_symbol" value="K"/>
+            <column name="internationalized_name_code" value="currency.ZMW"/>
+        </insert>
+    </changeSet>
+
+    <!-- 3. DisbursePro global configurations -->
+    <changeSet author="dispro" id="dispro-seed-3-configurations">
+        <!-- Platform identity -->
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-platform-name"/>
+            <column name="value"/>
+            <column name="string_value" value="DisbursePro"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Display name shown in admin and approver dashboards"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-default-currency"/>
+            <column name="value"/>
+            <column name="string_value" value="ZMW"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Default currency for disbursements and wallet"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-country-code"/>
+            <column name="value"/>
+            <column name="string_value" value="ZM"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="ISO 3166-1 alpha-2 country code for tenant"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-phone-country-prefix"/>
+            <column name="value"/>
+            <column name="string_value" value="+260"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Default E.164 phone prefix for employee/beneficiary registration"/>
+        </insert>
+
+        <!-- Fees (stored in basis points: 1 bps = 0.01%) -->
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-platform-fee-bps"/>
+            <column name="value" valueNumeric="100"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="DisbursePro platform fee in basis points (100 bps = 1%)"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-fee-airtel-withdrawal-bps"/>
+            <column name="value" valueNumeric="250"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Airtel Money withdrawal fee (2.50%)"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-fee-airtel-purchase-bps"/>
+            <column name="value" valueNumeric="50"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Airtel Money purchase fee (0.50%)"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-fee-mtn-withdrawal-bps"/>
+            <column name="value" valueNumeric="200"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="MTN MoMo withdrawal fee (2.00%)"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-fee-mtn-purchase-bps"/>
+            <column name="value" valueNumeric="40"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="MTN MoMo purchase fee (0.40%)"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-fee-zamtel-withdrawal-bps"/>
+            <column name="value" valueNumeric="150"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Zamtel Kwacha withdrawal fee (1.50%)"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-fee-zamtel-purchase-bps"/>
+            <column name="value" valueNumeric="30"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Zamtel Kwacha purchase fee (0.30%)"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-levy-threshold-zmw"/>
+            <column name="value" valueNumeric="5000"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Minimum disbursement amount (ZMW) that attracts government levy"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-levy-amount-cents"/>
+            <column name="value" valueNumeric="50"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Government levy amount in ZMW cents (50 = ZMW 0.50)"/>
+        </insert>
+
+        <!-- Approval thresholds -->
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-approval-auto-max-zmw"/>
+            <column name="value" valueNumeric="5000"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Disbursements at or below this amount (ZMW) are auto-approved"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-approval-single-max-zmw"/>
+            <column name="value" valueNumeric="50000"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Disbursements at or below this amount (ZMW) need single approver; above needs dual"/>
+        </insert>
+
+        <!-- Wallet limits -->
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-wallet-daily-limit-zmw"/>
+            <column name="value" valueNumeric="500000"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Maximum ZMW that can be disbursed per day from a company wallet"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-wallet-monthly-limit-zmw"/>
+            <column name="value" valueNumeric="10000000"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Maximum ZMW that can be disbursed per month from a company wallet"/>
+        </insert>
+
+        <!-- Carrier enable flags -->
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-airtel-enabled"/>
+            <column name="value" valueNumeric="1"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Enable Airtel Money Zambia disbursements"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-mtn-enabled"/>
+            <column name="value" valueNumeric="1"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Enable MTN MoMo Zambia disbursements"/>
+        </insert>
+        <insert tableName="c_configuration">
+            <column name="name" value="dispro-zamtel-enabled"/>
+            <column name="value" valueNumeric="1"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="is_trap_door" valueBoolean="false"/>
+            <column name="description" value="Enable Zamtel Kwacha Zambia disbursements"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
