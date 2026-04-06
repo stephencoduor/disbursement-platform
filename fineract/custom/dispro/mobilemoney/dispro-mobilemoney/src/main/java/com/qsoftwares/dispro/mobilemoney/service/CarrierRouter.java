@@ -50,6 +50,37 @@ public class CarrierRouter {
         healthMonitor.recordOutcome(carrier, success, latencyMs);
     }
 
+    /**
+     * Select an alternate carrier for failover.
+     * Public method used by RetryPolicy.
+     */
+    public String selectAlternate(String primaryCarrier) {
+        return getAlternate(primaryCarrier);
+    }
+
+    /**
+     * Get routing audit log (last 50 entries).
+     * Stub — in production, reads from m_dispro_routing_audit.
+     */
+    public List<Map<String, Object>> getRoutingLog() {
+        // Return empty for now; production reads from DB
+        return List.of();
+    }
+
+    /**
+     * Route a payment — returns carrier name + health.
+     * Used by RetryPolicy for simplified routing.
+     */
+    public RoutingDecision route(String msisdn, long amountNgwee) {
+        Map<String, Object> selection = selectCarrier(msisdn, null);
+        String carrier = (String) selection.get("selectedCarrier");
+        int healthScore = healthMonitor.getHealthScore(carrier);
+        boolean failover = "FAILOVER".equals(selection.get("reason"));
+        return new RoutingDecision(carrier, failover, healthScore);
+    }
+
+    public record RoutingDecision(String carrier, boolean failover, int healthScore) {}
+
     private String getAlternate(String carrier) {
         return switch (carrier) {
             case "AIRTEL" -> "MTN";

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!-- Alternate MSISDN for carrier failover -->
+    <changeSet id="0231-01-alternate-msisdn" author="dispro">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="m_dispro_recipient_msisdn_alt"/></not>
+        </preConditions>
+        <createTable tableName="m_dispro_recipient_msisdn_alt">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="employee_id" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="primary_msisdn" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="alternate_msisdn" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="alternate_carrier" type="VARCHAR(20)"/>
+            <column name="verified" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <createIndex tableName="m_dispro_recipient_msisdn_alt" indexName="idx_alt_msisdn_employee">
+            <column name="employee_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Retry audit log -->
+    <changeSet id="0231-02-retry-audit" author="dispro">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="m_dispro_retry_audit"/></not>
+        </preConditions>
+        <createTable tableName="m_dispro_retry_audit">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="disbursement_id" type="VARCHAR(50)"/>
+            <column name="msisdn" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="preferred_carrier" type="VARCHAR(20)"/>
+            <column name="routed_carrier" type="VARCHAR(20)"/>
+            <column name="failover" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="attempts" type="INT"/>
+            <column name="final_status" type="VARCHAR(20)"/>
+            <column name="latency_ms" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

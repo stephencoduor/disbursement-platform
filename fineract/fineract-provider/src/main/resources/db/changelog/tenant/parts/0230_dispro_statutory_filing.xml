@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!-- Statutory filing history -->
+    <changeSet id="0230-01-filing-history" author="dispro">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="m_dispro_filing_history"/></not>
+        </preConditions>
+        <createTable tableName="m_dispro_filing_history">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="filing_id" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="filing_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period" type="VARCHAR(7)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="employer_tpin" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="registration_number" type="VARCHAR(50)"/>
+            <column name="record_count" type="INT"/>
+            <column name="total_amount_ngwee" type="BIGINT"/>
+            <column name="status" type="VARCHAR(20)" defaultValue="DRAFT"/>
+            <column name="csv_content" type="TEXT"/>
+            <column name="submitted_at" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <createIndex tableName="m_dispro_filing_history" indexName="idx_filing_employer_period">
+            <column name="employer_tpin"/>
+            <column name="period"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

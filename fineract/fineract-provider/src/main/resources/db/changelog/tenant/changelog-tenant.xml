@@ -248,4 +248,6 @@
     <include file="parts/0227_dispro_approval_hardening.xml" relativeToChangelogFile="true" />
     <include file="parts/0228_dispro_audit_hashchain.xml" relativeToChangelogFile="true" />
     <include file="parts/0229_dispro_carrier_routing.xml" relativeToChangelogFile="true" />
+    <include file="parts/0230_dispro_statutory_filing.xml" relativeToChangelogFile="true" />
+    <include file="parts/0231_dispro_alternate_msisdn.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

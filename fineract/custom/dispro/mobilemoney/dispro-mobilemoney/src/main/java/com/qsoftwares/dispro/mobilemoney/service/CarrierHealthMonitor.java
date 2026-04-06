@@ -52,6 +52,25 @@ public class CarrierHealthMonitor {
             .orElse("AIRTEL");
     }
 
+    public double getSuccessRate(String carrier) {
+        List<long[]> window = windows.get(carrier);
+        if (window == null || window.isEmpty()) return 0;
+        long successes = window.stream().filter(r -> r[0] == 1).count();
+        return (double) successes / window.size() * 100.0;
+    }
+
+    public long getP95Latency(String carrier) {
+        List<long[]> window = windows.get(carrier);
+        if (window == null || window.isEmpty()) return 0;
+        return window.stream().mapToLong(r -> r[1]).sorted()
+            .skip((long) (window.size() * 0.95)).findFirst().orElse(0);
+    }
+
+    public int getSampleCount(String carrier) {
+        List<long[]> window = windows.get(carrier);
+        return window == null ? 0 : window.size();
+    }
+
     public Map<String, Object> getAllHealthScores() {
         Map<String, Object> scores = new LinkedHashMap<>();
         for (String carrier : List.of("AIRTEL", "MTN", "ZAMTEL")) {
