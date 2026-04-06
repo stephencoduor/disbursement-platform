@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,8 @@ import {
 } from "@/components/ui/select";
 import { auditLog } from "@/data/mock";
 import { fmtDateTime } from "@/lib/format";
-import { Search, Download } from "lucide-react";
+import { Search, Download, ShieldCheck, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { useAuditEvents, useVerifyChain } from "@/hooks/use-audit";
 
 const severityStyles: Record<string, string> = {
   info: "bg-primary/10 text-primary",
@@ -50,6 +51,24 @@ export default function AuditLogPage() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [severityFilter, setSeverityFilter] = useState("all");
 
+  // API hooks — hash-chained audit trail from backend
+  const { data: apiEvents, error: eventsError } = useAuditEvents();
+  const { mutate: verifyChain, data: chainResult, loading: verifying } = useVerifyChain();
+
+  // Merge API events into display (overlay on local mock data)
+  const hashChainEvents = useMemo(() => {
+    if (!apiEvents) return [];
+    return apiEvents.map((evt) => ({
+      id: evt.id,
+      hash: evt.hash.slice(0, 12) + "...",
+      entityType: evt.entityType,
+      action: evt.action,
+      user: evt.userName,
+      ip: evt.ipAddress,
+      timestamp: evt.createdAt,
+    }));
+  }, [apiEvents]);
+
   const filtered = auditLog.filter((entry) => {
     const matchSearch =
       entry.action.toLowerCase().includes(search.toLowerCase()) ||
@@ -66,11 +85,49 @@ export default function AuditLogPage() {
         <CardHeader className="pb-3">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="text-base">Audit Log</CardTitle>
-            <Button variant="outline" size="sm">
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => verifyChain()}
+                disabled={verifying}
+              >
+                {verifying ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <ShieldCheck className="mr-2 h-4 w-4" />
+                )}
+                {verifying ? "Verifying..." : "Verify Chain"}
+              </Button>
+              <Button variant="outline" size="sm">
+                <Download className="mr-2 h-4 w-4" />
+                Export
+              </Button>
+            </div>
           </div>
+          {/* Chain verification result */}
+          {chainResult && (
+            <div className={`mt-3 flex items-center gap-2 rounded-lg border px-3 py-2 text-sm ${
+              chainResult.valid
+                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
+                : "border-destructive/30 bg-destructive/10 text-destructive"
+            }`}>
+              {chainResult.valid ? (
+                <CheckCircle2 className="h-4 w-4" />
+              ) : (
+                <XCircle className="h-4 w-4" />
+              )}
+              {chainResult.valid
+                ? `Hash chain verified: ${chainResult.verifiedEvents}/${chainResult.totalEvents} events intact`
+                : `Chain broken at event #${chainResult.firstBrokenIndex} (${chainResult.firstBrokenEventId})`
+              }
+            </div>
+          )}
+          {eventsError && (
+            <div className="mt-2 text-xs text-amber-600">
+              Backend unavailable — showing local audit data only
+            </div>
+          )}
         </CardHeader>
         <CardContent>
           {/* Filters */}
