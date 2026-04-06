@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="dispro" id="dispro-approval-hard-1-totp">
+        <preConditions onFail="MARK_RAN"><not><tableExists tableName="m_dispro_totp_enrollment"/></not></preConditions>
+        <createTable tableName="m_dispro_totp_enrollment">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="user_id" type="BIGINT"><constraints nullable="false"/></column>
+            <column name="secret_encrypted" type="TEXT"><constraints nullable="false"/></column>
+            <column name="enrolled_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="revoked_at" type="TIMESTAMP"/>
+            <column name="device_name" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="dispro" id="dispro-approval-hard-2-audit">
+        <preConditions onFail="MARK_RAN"><not><tableExists tableName="m_dispro_approval_audit"/></not></preConditions>
+        <createTable tableName="m_dispro_approval_audit">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="disbursement_id" type="BIGINT"><constraints nullable="false"/></column>
+            <column name="maker_id" type="BIGINT"><constraints nullable="false"/></column>
+            <column name="checker_id" type="BIGINT"><constraints nullable="false"/></column>
+            <column name="action" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="totp_verified" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="comments" type="TEXT"/>
+            <column name="acted_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

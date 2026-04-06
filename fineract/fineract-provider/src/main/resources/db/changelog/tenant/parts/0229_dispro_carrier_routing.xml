@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="dispro" id="dispro-carrier-1-health">
+        <preConditions onFail="MARK_RAN"><not><tableExists tableName="m_dispro_carrier_health"/></not></preConditions>
+        <createTable tableName="m_dispro_carrier_health">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="carrier" type="VARCHAR(10)"><constraints nullable="false"/></column>
+            <column name="success_count" type="INT" defaultValueNumeric="0"/>
+            <column name="failure_count" type="INT" defaultValueNumeric="0"/>
+            <column name="avg_latency_ms" type="INT"/>
+            <column name="p95_latency_ms" type="INT"/>
+            <column name="health_score" type="INT" defaultValueNumeric="100"/>
+            <column name="window_start" type="TIMESTAMP"/>
+            <column name="window_end" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="dispro" id="dispro-carrier-2-routing-audit">
+        <preConditions onFail="MARK_RAN"><not><tableExists tableName="m_dispro_routing_audit"/></not></preConditions>
+        <createTable tableName="m_dispro_routing_audit">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="disbursement_id" type="BIGINT"/>
+            <column name="recipient_msisdn" type="VARCHAR(15)"><constraints nullable="false"/></column>
+            <column name="preferred_carrier" type="VARCHAR(10)"/>
+            <column name="selected_carrier" type="VARCHAR(10)"><constraints nullable="false"/></column>
+            <column name="reason" type="VARCHAR(30)"><constraints nullable="false"/></column>
+            <column name="failover_attempted" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="dispro" id="dispro-carrier-3-seed">
+        <preConditions onFail="MARK_RAN"><sqlCheck expectedResult="0">SELECT COUNT(*) FROM m_dispro_carrier_health</sqlCheck></preConditions>
+        <insert tableName="m_dispro_carrier_health"><column name="carrier" value="AIRTEL"/><column name="health_score" valueNumeric="100"/><column name="success_count" valueNumeric="0"/><column name="failure_count" valueNumeric="0"/></insert>
+        <insert tableName="m_dispro_carrier_health"><column name="carrier" value="MTN"/><column name="health_score" valueNumeric="100"/><column name="success_count" valueNumeric="0"/><column name="failure_count" valueNumeric="0"/></insert>
+        <insert tableName="m_dispro_carrier_health"><column name="carrier" value="ZAMTEL"/><column name="health_score" valueNumeric="100"/><column name="success_count" valueNumeric="0"/><column name="failure_count" valueNumeric="0"/></insert>
+    </changeSet>
+
+</databaseChangeLog>
