@@ -4,3 +4,5 @@ export { default as kybService } from "./kyb-service";
 export { default as approvalService } from "./approval-service";
 export { default as auditService } from "./audit-service";
 export { default as filingService } from "./filing-service";
+export { default as kybLiveService } from "./kyb-live-service";
+export { default as walletTopUpService } from "./wallet-topup-service";

@@ -250,4 +250,6 @@
     <include file="parts/0229_dispro_carrier_routing.xml" relativeToChangelogFile="true" />
     <include file="parts/0230_dispro_statutory_filing.xml" relativeToChangelogFile="true" />
     <include file="parts/0231_dispro_alternate_msisdn.xml" relativeToChangelogFile="true" />
+    <include file="parts/0232_dispro_kyb_live.xml" relativeToChangelogFile="true" />
+    <include file="parts/0233_dispro_wallet_topup.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>
