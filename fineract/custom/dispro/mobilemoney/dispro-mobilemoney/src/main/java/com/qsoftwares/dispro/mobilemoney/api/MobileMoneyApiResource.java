@@ -7,6 +7,8 @@
 package com.qsoftwares.dispro.mobilemoney.api;
 
 import com.qsoftwares.dispro.mobilemoney.service.AirtelMoneyService;
+import com.qsoftwares.dispro.mobilemoney.service.CarrierHealthMonitor;
+import com.qsoftwares.dispro.mobilemoney.service.CarrierRouter;
 import com.qsoftwares.dispro.mobilemoney.service.MtnMomoService;
 import com.qsoftwares.dispro.mobilemoney.service.ZamtelKwachaService;
 import jakarta.ws.rs.Consumes;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -34,6 +37,8 @@ public class MobileMoneyApiResource {
     private final AirtelMoneyService airtelMoneyService;
     private final MtnMomoService mtnMomoService;
     private final ZamtelKwachaService zamtelKwachaService;
+    private final CarrierRouter carrierRouter;
+    private final CarrierHealthMonitor carrierHealthMonitor;
 
     /**
      * Send money to a phone number via the specified carrier.
@@ -122,5 +127,49 @@ public class MobileMoneyApiResource {
         }
 
         return Response.ok(result).build();
+    }
+
+    // ── P0-8 Carrier Failover: Health & Routing endpoints ──
+
+    /**
+     * Get carrier health dashboard showing success rate, latency, and health score
+     * for all three Zambian carriers (Airtel, MTN, Zamtel).
+     *
+     * @return health metrics per carrier
+     */
+    @GET
+    @Path("/health")
+    public Response getCarrierHealth() {
+        log.info("Fetching carrier health dashboard");
+
+        Map<String, Object> health = carrierHealthMonitor.getAllHealthScores();
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("carriers", health);
+        result.put("country", "ZM");
+        result.put("currency", "ZMW");
+
+        return Response.ok(result).build();
+    }
+
+    /**
+     * Get routing decision for a recipient MSISDN.
+     * Uses prefix matching and health-aware failover.
+     *
+     * @param request JSON body with: recipientMsisdn (+260...), preferredCarrier (optional)
+     * @return routing decision with selected carrier and reason
+     */
+    @POST
+    @Path("/route")
+    public Response getRoutingDecision(Map<String, Object> request) {
+        String msisdn = request.getOrDefault("recipientMsisdn", "").toString();
+        String preferred = request.get("preferredCarrier") != null
+                ? request.get("preferredCarrier").toString() : null;
+
+        log.info("Computing routing decision: msisdn={}, preferred={}", msisdn, preferred);
+
+        Map<String, Object> decision = carrierRouter.selectCarrier(msisdn, preferred);
+
+        return Response.ok(decision).build();
     }
 }

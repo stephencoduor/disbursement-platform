@@ -245,4 +245,7 @@
     <include file="parts/0224_dispro_seed_data.xml" relativeToChangelogFile="true" />
     <include file="parts/0225_dispro_statutory.xml" relativeToChangelogFile="true" />
     <include file="parts/0226_dispro_kyb.xml" relativeToChangelogFile="true" />
+    <include file="parts/0227_dispro_approval_hardening.xml" relativeToChangelogFile="true" />
+    <include file="parts/0228_dispro_audit_hashchain.xml" relativeToChangelogFile="true" />
+    <include file="parts/0229_dispro_carrier_routing.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>
