@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    DisbursePro — Statutory Tax Engine Tables
+    Copyright (c) 2026 Qsoftwares Ltd. All rights reserved.
+
+    Creates tables for Zambian 2025 statutory deduction calculations:
+    - m_dispro_paye_band: PAYE income tax bands
+    - m_dispro_statutory_rate: NAPSA, NHIMA, SDL rates and ceilings
+    - m_dispro_statutory_calculation: Audit log of payroll calculations
+
+    Seeds 2025 Zambian PAYE bands, NAPSA (5%+5%, ceiling ZMW 1,708.20),
+    NHIMA (1%+1%), and SDL (0.5% employer). All money in minor units (ngwee),
+    all rates in basis points (10000 bps = 100%).
+-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <!-- 1. PAYE bands table -->
+    <changeSet author="dispro" id="dispro-statutory-1-paye-band">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="m_dispro_paye_band"/></not>
+        </preConditions>
+        <createTable tableName="m_dispro_paye_band">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="country_code" type="VARCHAR(2)" defaultValue="ZM">
+                <constraints nullable="false"/>
+            </column>
+            <column name="effective_from" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lower_bound_minor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="upper_bound_minor" type="BIGINT">
+                <!-- NULL means no upper limit -->
+            </column>
+            <column name="rate_bps" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR(3)" defaultValue="ZMW">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 2. Statutory rates table (NAPSA, NHIMA, SDL) -->
+    <changeSet author="dispro" id="dispro-statutory-2-statutory-rate">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="m_dispro_statutory_rate"/></not>
+        </preConditions>
+        <createTable tableName="m_dispro_statutory_rate">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="country_code" type="VARCHAR(2)" defaultValue="ZM">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scheme" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+                <!-- NAPSA, NHIMA, SDL -->
+            </column>
+            <column name="party" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+                <!-- EMPLOYEE, EMPLOYER -->
+            </column>
+            <column name="rate_bps" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ceiling_minor" type="BIGINT">
+                <!-- NULL means no ceiling -->
+            </column>
+            <column name="effective_from" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 3. Statutory calculation audit table -->
+    <changeSet author="dispro" id="dispro-statutory-3-calculation">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="m_dispro_statutory_calculation"/></not>
+        </preConditions>
+        <createTable tableName="m_dispro_statutory_calculation">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="client_id" type="BIGINT"/>
+            <column name="period_month" type="VARCHAR(7)">
+                <!-- Format: YYYY-MM -->
+                <constraints nullable="false"/>
+            </column>
+            <column name="gross_minor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paye_minor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="napsa_ee_minor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="napsa_er_minor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nhima_ee_minor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nhima_er_minor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sdl_minor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="net_minor" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="calculated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="engine_version" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 4. Seed 2025 PAYE bands (Zambia) -->
+    <changeSet author="dispro" id="dispro-statutory-4-seed-paye-bands">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM m_dispro_paye_band WHERE country_code = 'ZM'</sqlCheck>
+        </preConditions>
+        <!-- Band 1: 0% on first ZMW 5,100 (510,000 ngwee) -->
+        <insert tableName="m_dispro_paye_band">
+            <column name="country_code" value="ZM"/>
+            <column name="effective_from" valueDate="2025-01-01"/>
+            <column name="lower_bound_minor" valueNumeric="0"/>
+            <column name="upper_bound_minor" valueNumeric="510000"/>
+            <column name="rate_bps" valueNumeric="0"/>
+            <column name="currency" value="ZMW"/>
+        </insert>
+        <!-- Band 2: 20% on ZMW 5,100 – 7,100 -->
+        <insert tableName="m_dispro_paye_band">
+            <column name="country_code" value="ZM"/>
+            <column name="effective_from" valueDate="2025-01-01"/>
+            <column name="lower_bound_minor" valueNumeric="510000"/>
+            <column name="upper_bound_minor" valueNumeric="710000"/>
+            <column name="rate_bps" valueNumeric="2000"/>
+            <column name="currency" value="ZMW"/>
+        </insert>
+        <!-- Band 3: 30% on ZMW 7,100 – 9,200 -->
+        <insert tableName="m_dispro_paye_band">
+            <column name="country_code" value="ZM"/>
+            <column name="effective_from" valueDate="2025-01-01"/>
+            <column name="lower_bound_minor" valueNumeric="710000"/>
+            <column name="upper_bound_minor" valueNumeric="920000"/>
+            <column name="rate_bps" valueNumeric="3000"/>
+            <column name="currency" value="ZMW"/>
+        </insert>
+        <!-- Band 4: 37% above ZMW 9,200 -->
+        <insert tableName="m_dispro_paye_band">
+            <column name="country_code" value="ZM"/>
+            <column name="effective_from" valueDate="2025-01-01"/>
+            <column name="lower_bound_minor" valueNumeric="920000"/>
+            <column name="upper_bound_minor"/>
+            <column name="rate_bps" valueNumeric="3700"/>
+            <column name="currency" value="ZMW"/>
+        </insert>
+    </changeSet>
+
+    <!-- 5. Seed 2025 statutory rates (NAPSA, NHIMA, SDL) -->
+    <changeSet author="dispro" id="dispro-statutory-5-seed-rates">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM m_dispro_statutory_rate WHERE country_code = 'ZM'</sqlCheck>
+        </preConditions>
+        <!-- NAPSA: 5% employee, ceiling ZMW 1,708.20 = 170,820 ngwee -->
+        <insert tableName="m_dispro_statutory_rate">
+            <column name="country_code" value="ZM"/>
+            <column name="scheme" value="NAPSA"/>
+            <column name="party" value="EMPLOYEE"/>
+            <column name="rate_bps" valueNumeric="500"/>
+            <column name="ceiling_minor" valueNumeric="170820"/>
+            <column name="effective_from" valueDate="2025-01-01"/>
+        </insert>
+        <!-- NAPSA: 5% employer, ceiling ZMW 1,708.20 -->
+        <insert tableName="m_dispro_statutory_rate">
+            <column name="country_code" value="ZM"/>
+            <column name="scheme" value="NAPSA"/>
+            <column name="party" value="EMPLOYER"/>
+            <column name="rate_bps" valueNumeric="500"/>
+            <column name="ceiling_minor" valueNumeric="170820"/>
+            <column name="effective_from" valueDate="2025-01-01"/>
+        </insert>
+        <!-- NHIMA: 1% employee, no ceiling -->
+        <insert tableName="m_dispro_statutory_rate">
+            <column name="country_code" value="ZM"/>
+            <column name="scheme" value="NHIMA"/>
+            <column name="party" value="EMPLOYEE"/>
+            <column name="rate_bps" valueNumeric="100"/>
+            <column name="ceiling_minor"/>
+            <column name="effective_from" valueDate="2025-01-01"/>
+        </insert>
+        <!-- NHIMA: 1% employer, no ceiling -->
+        <insert tableName="m_dispro_statutory_rate">
+            <column name="country_code" value="ZM"/>
+            <column name="scheme" value="NHIMA"/>
+            <column name="party" value="EMPLOYER"/>
+            <column name="rate_bps" valueNumeric="100"/>
+            <column name="ceiling_minor"/>
+            <column name="effective_from" valueDate="2025-01-01"/>
+        </insert>
+        <!-- SDL: 0.5% employer only -->
+        <insert tableName="m_dispro_statutory_rate">
+            <column name="country_code" value="ZM"/>
+            <column name="scheme" value="SDL"/>
+            <column name="party" value="EMPLOYER"/>
+            <column name="rate_bps" valueNumeric="50"/>
+            <column name="ceiling_minor"/>
+            <column name="effective_from" valueDate="2025-01-01"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

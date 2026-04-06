@@ -243,4 +243,6 @@
     <include file="parts/0222_transaction_summary_reports_fix_after_originator_details.xml" relativeToChangelogFile="true" />
     <include file="parts/0223_trial_balance_summary_rename_originators_column.xml" relativeToChangelogFile="true" />
     <include file="parts/0224_dispro_seed_data.xml" relativeToChangelogFile="true" />
+    <include file="parts/0225_dispro_statutory.xml" relativeToChangelogFile="true" />
+    <include file="parts/0226_dispro_kyb.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>
