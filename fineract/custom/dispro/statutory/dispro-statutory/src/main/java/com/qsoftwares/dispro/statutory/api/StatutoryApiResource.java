@@ -1,11 +1,13 @@
 /**
- * DisbursePro — Statutory Tax Engine API Resource
- * JAX-RS endpoints for Zambian 2025 statutory deduction calculations.
+ * DisbursePro — Statutory Tax API Resource
+ * JAX-RS endpoints for Zambian payroll statutory deduction calculations.
  *
  * Copyright (c) 2026 Qsoftwares Ltd. All rights reserved.
  */
 package com.qsoftwares.dispro.statutory.api;
 
+import com.qsoftwares.dispro.statutory.dto.PayrollCalculationRequest;
+import com.qsoftwares.dispro.statutory.dto.PayrollCalculationResponse;
 import com.qsoftwares.dispro.statutory.service.StatutoryCalculationService;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -29,48 +31,42 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class StatutoryApiResource {
 
-    private final StatutoryCalculationService statutoryCalculationService;
+    private final StatutoryCalculationService calculationService;
 
     /**
-     * Calculate statutory deductions for a gross monthly salary.
-     * Accepts gross salary in minor units (ngwee) and returns full PAYE/NAPSA/NHIMA/SDL breakdown.
+     * Calculate PAYE, NAPSA, NHIMA, and SDL for a given gross salary.
      *
-     * @param request PayrollCalculationRequest with grossSalary (ngwee) and optional currencyCode
-     * @return PayrollCalculationResponse with net pay and all deduction amounts
+     * @param request JSON with grossSalaryMinor (ngwee), currencyCode, periodMonth
+     * @return full statutory deduction breakdown
      */
     @POST
     @Path("/calculate")
     public Response calculate(PayrollCalculationRequest request) {
-        log.info("Statutory calculation request: grossSalary={} ngwee, currency={}",
-                request.getGrossSalary(), request.getCurrencyCode());
-
-        PayrollCalculationResponse response = statutoryCalculationService.calculate(request);
-        return Response.ok(response).build();
+        log.info("Statutory calculation request: gross={} ngwee, currency={}",
+                request.getGrossSalaryMinor(), request.getCurrencyCode());
+        PayrollCalculationResponse result = calculationService.calculate(request);
+        return Response.ok(result).build();
     }
 
     /**
-     * Return current 2025 Zambian PAYE income tax bands.
-     *
-     * @return list of bands with lower/upper bounds (ngwee), rate (bps), and human-readable values
+     * Return the current Zambian PAYE tax bands (2025).
      */
     @GET
     @Path("/bands/paye")
     public Response getPayeBands() {
         log.info("Fetching PAYE bands");
-        List<Map<String, Object>> bands = statutoryCalculationService.getPayeBands();
-        return Response.ok(bands).build();
+        List<Map<String, Object>> bands = calculationService.getPayeBands();
+        return Response.ok(Map.of("country", "ZM", "effectiveFrom", "2025-01-01", "bands", bands)).build();
     }
 
     /**
-     * Return statutory ceilings and rates for NAPSA, NHIMA, and SDL.
-     *
-     * @return map with scheme details, rates (bps), ceilings (ngwee), and effective date
+     * Return NAPSA ceiling, NHIMA rate, and SDL rate.
      */
     @GET
     @Path("/ceilings")
     public Response getCeilings() {
-        log.info("Fetching statutory ceilings");
-        Map<String, Object> ceilings = statutoryCalculationService.getCeilings();
+        log.info("Fetching statutory ceilings and rates");
+        Map<String, Object> ceilings = calculationService.getCeilings();
         return Response.ok(ceilings).build();
     }
 }

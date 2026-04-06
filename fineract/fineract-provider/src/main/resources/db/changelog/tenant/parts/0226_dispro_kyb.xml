@@ -1,103 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    DisbursePro — KYB (Know Your Business) Tables
-    Copyright (c) 2026 Qsoftwares Ltd. All rights reserved.
-
-    Creates tables for employer onboarding and verification:
-    - m_dispro_employer: Company registration with TPIN, PACRA, NAPSA, NHIMA identifiers
-    - m_dispro_employer_document: KYB document uploads (cert of incorp, tax clearance, etc.)
-    - m_dispro_employer_director: Director/shareholder KYC with NRC numbers
--->
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
-    <!-- 1. Employer table -->
     <changeSet author="dispro" id="dispro-kyb-1-employer">
-        <preConditions onFail="MARK_RAN">
-            <not><tableExists tableName="m_dispro_employer"/></not>
-        </preConditions>
+        <preConditions onFail="MARK_RAN"><not><tableExists tableName="m_dispro_employer"/></not></preConditions>
         <createTable tableName="m_dispro_employer">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="legal_name" type="VARCHAR(200)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="trading_name" type="VARCHAR(200)"/>
-            <column name="tpin" type="VARCHAR(20)">
-                <constraints nullable="false"/>
-                <!-- Zambian TPIN: 10-digit Taxpayer Identification Number -->
-            </column>
-            <column name="pacra_number" type="VARCHAR(20)">
-                <!-- PACRA company registration number -->
-            </column>
-            <column name="napsa_number" type="VARCHAR(30)">
-                <!-- NAPSA employer registration number -->
-            </column>
-            <column name="nhima_number" type="VARCHAR(30)">
-                <!-- NHIMA employer registration number -->
-            </column>
-            <column name="country_code" type="VARCHAR(2)" defaultValue="ZM">
-                <constraints nullable="false"/>
-            </column>
-            <column name="status" type="VARCHAR(20)" defaultValue="PENDING">
-                <constraints nullable="false"/>
-                <!-- PENDING, VERIFIED, REJECTED, SUSPENDED -->
-            </column>
-            <column name="created_at" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="legal_name" type="VARCHAR(255)"><constraints nullable="false"/></column>
+            <column name="trading_name" type="VARCHAR(255)"/>
+            <column name="tpin" type="VARCHAR(20)"><constraints nullable="false" unique="true"/></column>
+            <column name="pacra_number" type="VARCHAR(20)"/>
+            <column name="napsa_number" type="VARCHAR(30)"/>
+            <column name="nhima_number" type="VARCHAR(30)"/>
+            <column name="country_code" type="VARCHAR(2)" defaultValue="ZM"><constraints nullable="false"/></column>
+            <column name="status" type="VARCHAR(20)" defaultValue="PENDING"><constraints nullable="false"/></column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"><constraints nullable="false"/></column>
             <column name="verified_at" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
 
-    <!-- 2. Employer document table -->
-    <changeSet author="dispro" id="dispro-kyb-2-employer-document">
-        <preConditions onFail="MARK_RAN">
-            <not><tableExists tableName="m_dispro_employer_document"/></not>
-        </preConditions>
+    <changeSet author="dispro" id="dispro-kyb-2-documents">
+        <preConditions onFail="MARK_RAN"><not><tableExists tableName="m_dispro_employer_document"/></not></preConditions>
         <createTable tableName="m_dispro_employer_document">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="employer_id" type="BIGINT">
-                <constraints nullable="false" foreignKeyName="fk_dispro_empdoc_employer"
-                             references="m_dispro_employer(id)"/>
-            </column>
-            <column name="doc_type" type="VARCHAR(30)">
-                <constraints nullable="false"/>
-                <!-- CERT_INCORP, TAX_CLEARANCE, NAPSA_REG, NHIMA_REG, DIRECTORS_ID -->
-            </column>
-            <column name="file_ref" type="VARCHAR(255)"/>
-            <column name="verified" type="BOOLEAN" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-            <column name="uploaded_at" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="employer_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_kyb_doc_employer" references="m_dispro_employer(id)"/></column>
+            <column name="doc_type" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="file_ref" type="VARCHAR(500)"><constraints nullable="false"/></column>
+            <column name="verified" type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false"/></column>
+            <column name="uploaded_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"><constraints nullable="false"/></column>
         </createTable>
     </changeSet>
 
-    <!-- 3. Employer director table -->
-    <changeSet author="dispro" id="dispro-kyb-3-employer-director">
-        <preConditions onFail="MARK_RAN">
-            <not><tableExists tableName="m_dispro_employer_director"/></not>
-        </preConditions>
+    <changeSet author="dispro" id="dispro-kyb-3-directors">
+        <preConditions onFail="MARK_RAN"><not><tableExists tableName="m_dispro_employer_director"/></not></preConditions>
         <createTable tableName="m_dispro_employer_director">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="employer_id" type="BIGINT">
-                <constraints nullable="false" foreignKeyName="fk_dispro_empdir_employer"
-                             references="m_dispro_employer(id)"/>
-            </column>
-            <column name="full_name" type="VARCHAR(150)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="nrc_number" type="VARCHAR(20)">
-                <!-- Zambian NRC format: 123456/78/1 -->
-            </column>
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="employer_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_kyb_dir_employer" references="m_dispro_employer(id)"/></column>
+            <column name="full_name" type="VARCHAR(255)"><constraints nullable="false"/></column>
+            <column name="nrc_number" type="VARCHAR(20)"><constraints nullable="false"/></column>
             <column name="role" type="VARCHAR(50)"/>
             <column name="ownership_pct" type="DECIMAL(5,2)"/>
         </createTable>
